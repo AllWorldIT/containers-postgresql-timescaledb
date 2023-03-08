@@ -20,7 +20,7 @@
 # IN THE SOFTWARE.
 
 
-set -e
+set -ex
 
 POSTGRESQL_VERSION=$(grep "ENV POSTGRESQL_VER" Dockerfile | sed -e 's/ENV POSTGRESQL_VER=//')
 TIMESCALEDB_VERSION=$(grep "ENV TIMESCALEDB_VER" Dockerfile | head -n1 | sed -e 's/ENV TIMESCALEDB_VER=//')
