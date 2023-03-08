@@ -71,6 +71,7 @@ RUN set -eux; \
 # Patching
 	# TODO: Patch can maybe be removed in future? 2.10.0+
 	patch -p1 < ../patches/disable-partialize_finalize-test.patch; \
+	patch -p1 < ../patches/timescaledb-2.9.3_disable-pg_join-test.patch; \
 	mkdir build; \
 	cd build; \
 # Compiler flags
