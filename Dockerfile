@@ -179,9 +179,9 @@ COPY --from=tsbuilder-2.9.3 /build/timescaledb-root /
 
 
 ARG VERSION_INFO=
-LABEL org.opencontainers.image.authors   = "Nigel Kukard <nkukard@conarx.tech>"
-LABEL org.opencontainers.image.version   = "3.17"
-LABEL org.opencontainers.image.base.name = "registry.conarx.tech/containers/postgresql/3.17"
+LABEL org.opencontainers.image.authors   "Nigel Kukard <nkukard@conarx.tech>"
+LABEL org.opencontainers.image.version   "3.17"
+LABEL org.opencontainers.image.base.name "registry.conarx.tech/containers/postgresql/3.17"
 
 
 RUN set -eux; \
