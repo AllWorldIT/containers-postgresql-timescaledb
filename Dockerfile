@@ -74,10 +74,7 @@ RUN set -eux; \
 	patch -p1 < ../patches/timescaledb-2.9.3_disable-pg_join-test.patch; \
 	mkdir build; \
 	cd build; \
-# Compiler flags
-	export CFLAGS="-march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions -Wp,-D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -fstack-clash-protection -fcf-protection -flto=auto"; \
-	export CXXFLAGS="-Wp,-D_GLIBCXX_ASSERTIONS"; \
-	export LDFLAGS="-Wl,-O2,--sort-common,--as-needed,-z,relro,-z,now -flto=auto"; \
+	\
 	cmake ..; \
 	make VERBOSE=1 -j$(nproc) -l 8; \
 	make DESTDIR="/build/timescaledb-root" install; \
@@ -132,10 +129,7 @@ RUN set -eux; \
 	patch -p1 < ../patches/disable-partialize_finalize-test.patch; \
 	mkdir build; \
 	cd build; \
-# Compiler flags
-	export CFLAGS="-march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions -Wp,-D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -fstack-clash-protection -fcf-protection -flto=auto"; \
-	export CXXFLAGS="-Wp,-D_GLIBCXX_ASSERTIONS"; \
-	export LDFLAGS="-Wl,-O2,--sort-common,--as-needed,-z,relro,-z,now -flto=auto"; \
+	\
 	cmake ..; \
 	make VERBOSE=1 -j$(nproc) -l 8; \
 	make DESTDIR="/build/timescaledb-root" install; \
