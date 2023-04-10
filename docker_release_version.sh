@@ -20,11 +20,13 @@
 # IN THE SOFTWARE.
 
 
-set -ex
+#set -ex
+set -ux
+
+echo "SHELL: $SHELL"
 
 POSTGRESQL_VERSION=$(grep "ENV POSTGRESQL_VER" Dockerfile | sed -e 's/ENV POSTGRESQL_VER=//')
-TIMESCALEDB_VERSION=$(grep "ENV TIMESCALEDB_VER" Dockerfile | head -n1 | sed -e 's/ENV TIMESCALEDB_VER=//')
-
+TIMESCALEDB_VERSION=$(grep "ENV TIMESCALEDB_VER" Dockerfile | head -n 1 | sed -e 's/ENV TIMESCALEDB_VER=//')
 PG_VERSION=$(echo "$POSTGRESQL_VERSION" | cut -d. -f1)
 
 export CONTAINER_VERSION_EXTRA="pg$PG_VERSION-$TIMESCALEDB_VERSION"
