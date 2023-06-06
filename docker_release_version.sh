@@ -22,9 +22,10 @@
 
 set -ex
 
-POSTGRESQL_VERSION=$(grep "ENV POSTGRESQL_VER" Dockerfile | sed -e 's/ENV POSTGRESQL_VER=//')
-TIMESCALEDB_VERSION=$(grep "ENV TIMESCALEDB_VER" Dockerfile | head -n1 | sed -e 's/ENV TIMESCALEDB_VER=//')
-
-PG_VERSION=$(echo "$POSTGRESQL_VERSION" | cut -d. -f1)
+eval <<EOF
+grep "ENV POSTGRESQL_VER" Dockerfile | sed -e 's/ENV //'
+grep "ENV TIMESCALEDB_VER" Dockerfile | head -n1 | sed -e 's/ENV //'
+echo -n "PG_VERSION="; echo "$POSTGRESQL_VERSION" | cut -d. -f1
+EOF
 
 export CONTAINER_VERSION_EXTRA="pg$PG_VERSION-$TIMESCALEDB_VERSION"
