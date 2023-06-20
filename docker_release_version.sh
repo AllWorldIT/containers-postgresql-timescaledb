@@ -25,6 +25,8 @@ set -ex
 eval <<EOF
 grep "ENV POSTGRESQL_VER" Dockerfile | sed -e 's/ENV //'
 grep "ENV TIMESCALEDB_VER" Dockerfile | head -n1 | sed -e 's/ENV //'
+EOF
+eval <<EOF
 echo -n "PG_VERSION="; echo "\$POSTGRESQL_VER" | cut -d. -f1
 EOF
 
