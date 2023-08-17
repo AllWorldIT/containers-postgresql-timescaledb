@@ -21,7 +21,7 @@
 
 FROM registry.conarx.tech/containers/postgresql/edge as tsbuilder-base
 
-ENV POSTGRESQL_VER=15.2
+ENV POSTGRESQL_VER=15.4
 
 # Copy build patches
 COPY patches build/patches
@@ -55,9 +55,9 @@ RUN set -eux; \
 
 
 
-FROM tsbuilder-base as tsbuilder-2.11.1
+FROM tsbuilder-base as tsbuilder-2.11.2
 
-ENV TIMESCALEDB_VER=2.11.1
+ENV TIMESCALEDB_VER=2.11.2
 
 # Checkout the right version
 RUN set -eux; \
