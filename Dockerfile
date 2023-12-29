@@ -19,7 +19,7 @@
 # IN THE SOFTWARE.
 
 
-FROM registry.conarx.tech/containers/postgresql/3.18 as tsbuilder-base
+FROM registry.conarx.tech/containers/postgresql/3.19 as tsbuilder-base
 
 ENV POSTGRESQL_VER=15.4
 
@@ -340,7 +340,6 @@ RUN set -eux; \
 
 
 
-
 FROM tsbuilder-base as tsbuilder-2.10.1
 
 ENV TIMESCALEDB_VER=2.10.1
@@ -511,7 +510,7 @@ RUN set -eux; \
 
 
 
-FROM registry.conarx.tech/containers/postgresql/3.18
+FROM registry.conarx.tech/containers/postgresql/3.19
 
 
 # NK: Versions are reverse ordered so newer ones overwrite data from older ones
@@ -527,8 +526,8 @@ COPY --from=tsbuilder-2.12.2 /build/timescaledb-root /
 
 ARG VERSION_INFO=
 LABEL org.opencontainers.image.authors   "Nigel Kukard <nkukard@conarx.tech>"
-LABEL org.opencontainers.image.version   "3.18"
-LABEL org.opencontainers.image.base.name "registry.conarx.tech/containers/postgresql/3.18"
+LABEL org.opencontainers.image.version   "3.19"
+LABEL org.opencontainers.image.base.name "registry.conarx.tech/containers/postgresql/3.19"
 
 
 RUN set -eux; \
