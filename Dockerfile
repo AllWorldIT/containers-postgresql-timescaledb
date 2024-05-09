@@ -21,7 +21,7 @@
 
 FROM registry.conarx.tech/containers/postgresql/edge as tsbuilder-base
 
-ENV POSTGRESQL_VER=16.2
+ENV POSTGRESQL_VER=16.3
 
 # Copy build patches
 COPY patches build/patches
@@ -52,6 +52,62 @@ RUN set -eux; \
 	# TimescaleDB
 	git clone https://github.com/timescale/timescaledb.git
 
+
+
+FROM tsbuilder-base as tsbuilder-2.15.0
+
+ENV TIMESCALEDB_VER=2.15.0
+
+# Checkout the right version
+RUN set -eux; \
+	cd build; \
+	cd timescaledb; \
+	git checkout "$TIMESCALEDB_VER"
+
+# Build
+RUN set -eux; \
+	cd build; \
+	cd "timescaledb"; \
+# Patching
+#	patch -p1 < ../patches/timescaledb-2.14.0-fix-test-output.patch; \
+	mkdir build; \
+	cd build; \
+	\
+	cmake ..; \
+	make VERBOSE=1 -j$(nproc) -l 8; \
+	make DESTDIR="/build/timescaledb-root" install; \
+	# We need to install a second time to run timescaledb tests
+	echo "Size before stripping..."; \
+	du -hs /build/timescaledb-root
+
+# Strip binaries
+RUN set -eux; \
+	cd build/timescaledb-root; \
+	scanelf --recursive --nobanner --osabi --etype "ET_DYN,ET_EXEC" .  | awk '{print $3}' | xargs \
+		strip \
+			--remove-section=.comment \
+			--remove-section=.note \
+			-R .gnu.lto_* -R .gnu.debuglto_* \
+			-N __gnu_lto_slim -N __gnu_lto_v1 \
+			--strip-unneeded; \
+	echo "Size after stripping..."; \
+	du -hs /build/timescaledb-root
+
+# Testing
+RUN set -eux; \
+	# Install TimescaleDB so we can run the installcheck tests below
+	tar -c -C /build/timescaledb-root . | tar -x -C /; \
+	# For testing we need to run the tests as a non-priv user
+	cd build; \
+	adduser -D pgsqltest; \
+	chown -R pgsqltest:pgsqltest "timescaledb"; \
+	cd "timescaledb"; \
+	cd build; \
+	# Test
+	if ! sudo -u pgsqltest make VERBOSE=1 -j1 -l8 installcheck; then \
+		cat test/regression.diffs; \
+		false; \
+	fi
 
 
 FROM tsbuilder-base as tsbuilder-2.14.2
@@ -231,6 +287,7 @@ FROM registry.conarx.tech/containers/postgresql/edge
 COPY --from=tsbuilder-2.14.0 /build/timescaledb-root /
 COPY --from=tsbuilder-2.14.1 /build/timescaledb-root /
 COPY --from=tsbuilder-2.14.2 /build/timescaledb-root /
+COPY --from=tsbuilder-2.15.0 /build/timescaledb-root /
 
 
 ARG VERSION_INFO=
