@@ -21,7 +21,7 @@
 
 FROM registry.conarx.tech/containers/postgresql/3.22 as tsbuilder-base
 
-ENV POSTGRESQL_VER=17.4
+ENV POSTGRESQL_VER=17.5
 
 # Copy build patches
 COPY patches build/patches
@@ -54,9 +54,9 @@ RUN set -eux; \
 
 
 
-FROM tsbuilder-base as tsbuilder-2.19.2
+FROM tsbuilder-base as tsbuilder-2.21.3
 
-ENV TIMESCALEDB_VER=2.19.2
+ENV TIMESCALEDB_VER=2.21.3
 
 # Checkout the right version
 RUN set -eux; \
@@ -115,7 +115,7 @@ FROM registry.conarx.tech/containers/postgresql/3.22
 
 
 # NK: Versions are reverse ordered so newer ones overwrite data from older ones
-COPY --from=tsbuilder-2.19.2 /build/timescaledb-root /
+COPY --from=tsbuilder-2.21.3 /build/timescaledb-root /
 
 
 ARG VERSION_INFO=
