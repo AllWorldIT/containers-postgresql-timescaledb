@@ -105,7 +105,7 @@ RUN set -eux; \
 	cd build; \
 	# Test
 	if ! sudo -u pgsqltest make VERBOSE=1 -j1 -l8 installcheck; then \
-		cat test/regression.diffs; \
+		find . -name regression.diffs -type f -exec sh -c 'echo "=== {} ==="; cat "{}"; echo' \;; \
 		false; \
 	fi
 
